@@ -1,14 +1,90 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1>Returns</h1>
+<div class="bg-gray-100" id="backgrounnd">
+  <div class="flex">
+    <div class="h-screen w-1/5 black"></div>
+    <div class="flex-col flex-auto ">
+      <div class="pl-8 pb-8 m-3">
+        <h1 class="text-3xl font-semibold my-3">Returns</h1>
+        <div class="bg-white flex justify-between w-full h-auto rounded-md p-4">
+          <div class="w-3/5 mx-4 my-4">
+            <% if notice.present? %>
+              <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice">
+                <%= notice %>
+              </p>
+            <% end %>
+            <p class="text-2xl font-semibold">Return Reasons</p>
+            <span>Add or edit return Reasons you would like to show your customers
+              during the return request process</span>
+          </div>
 
-  <fieldset>
-    <div>
-      <legend>Return Reasons</legend>
-      Add or edit return reasons you would like to show the customers during the return request process.
-    </div>
+          <div class="flex flex-col w-2/3 ml-3 rounded-lg border contant">
+            <div>
+              <p class="text-blue-600 px-3 py-3 font-semibold">
+                <i class="fas fa-plus-circle" style="color: #2562CB; font-size: 24px;"></i>
+                <%= link_to "Add Return Reason" , new_storefront_path, class: "text-xl" %>
+              </p>
+            </div>
+            <div class="border-b-2 h-px bg-black w-full"></div>
+            <div id="storefronts" class="min-w-full" data-controller="sortable" >
+              <% @storefront.reasons.ordered.each do |reason| %>
+                <% reason_id = "default-modal_#{reason.id}" %>
+                <ul class="images-wrapper" id = "<%= reason.id%>">                  
+                  <li class="form-image-card" id = "<%= reason.id%>" storefront_id="<%= reason.storefront_id %>">
+                    <div class="flex justify-between border-b-2 mb-0 pb-0 px-3">
+                     <p class="text-gray-800 py-4">
+                      <i class="fas fa-grip-vertical form-image" style="color: gray; cursor: grab; margin-right: 10px;" id="grip-icon"></i>
+                        <i class="fas fa-eye mr-2" style="color: blue;" id="<%= "eye-icon-#{reason.id}" %>"></i>
+                        <%= link_to "#{reason.label }" %>
+                      </p>
+                      <div id="<%= reason_id %>" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="rounded-lg relative p-4 w-full max-w-3xl max-h-full">
+                          <!-- Modal content -->
+                          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                            <!-- Modal header -->
+                            <div id="<%= reason_id %>" >
+                              <div class="flex modal-background bg-gray-100"  data-popup-target="popup">
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="<%= reason_id %>">
+                                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                  </svg>
+                                  <span class="sr-only">Close modal</span>
+                                </button>
 
-    <div>
-      <%= render "form", storefront: @storefront %>
+                                <div class=""></div>
+                                <div class="flex-col flex-auto ">
+
+                                    <div class="bg-white flex justify-between w-full h-auto rounded-md p-4">
+                                      <div class="w-5/5 mx-4 my-4">
+                                      <%= render partial: 'reason', locals: { reason: reason } %>
+
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <%# </div> %>
+                    <%# </div> %>
+                    <!-- Modal toggle -->
+                    <button data-modal-target="<%= reason_id %>" data-modal-toggle="<%= reason_id %>" class="block text-blue-700 hover:text-white hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-blue-600 dark:hover:bg-blue-800 dark:hover:text-white dark:focus:ring-blue-800" type="button">Edit</button>
+                    
+                    </div>
+                    <!-- Main modal -->                  
+                  </li>
+                </ul>
+              <% end%>  
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white flex justify-between text-center w-full h-auto p-5">
+        <h1 class="text-xs font-light">Remember to save your changes before leaving this page</h1>
+        <button class="px-5 py-2 font-medium border-2 bg-yellow-500 rounded-lg border-spacing-28">Save</button>
+      </div>
     </div>
-  </fieldset>
+  </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+

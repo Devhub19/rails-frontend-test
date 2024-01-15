@@ -6,13 +6,39 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-...">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css', integrity: '...', crossorigin: 'anonymous' %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
+ <style>
+    .black {
+      background-color: #292929;
+    }
 
+    .modal-width{
+      width: 70%;
+      padding-top: 10%;
+    }
+    .modal-background{
+      background-color: #292929;
+    }
+
+    .modal-black {
+      background-color: #292929;
+    }
+    .contant {
+      background-color: #f8f8fb;
+    }
+
+    
+  </style>
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main>
+      <%= turbo_frame_tag "modal" %>
       <%= yield %>
     </main>
   </body>

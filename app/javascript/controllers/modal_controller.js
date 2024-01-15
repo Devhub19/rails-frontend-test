@@ -1,9 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [
-    'modal'
-  ]
+  static targets = ["modal"];
+
+  connect() {
+    console.log(this.data)
+    this.modalIdentifier = this.data.get("identifier") || "default";
+  }
 
   show(e) {
     e.preventDefault();
@@ -15,15 +18,8 @@ export default class extends Controller {
     })
   }
 
-  hide(e) {
-    e.preventDefault()
 
-    this.modalTarget.querySelectorAll('x-transition').forEach((transition) => {
-      transition.open = false
-    })
-    this.modalTarget.open = false
-
-    document.querySelector('.desktop-overlay').style.zIndex = 1
-    this.dispatch('closed')
+  hide() {
+    this.modalTarget.hidden = true;
   }
 }

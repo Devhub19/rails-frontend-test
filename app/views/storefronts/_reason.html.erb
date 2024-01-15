@@ -1,29 +1,83 @@
-<div class="nested-form-wrapper">
-  <div class="dashboard-form-fields">
-    <%=
-      f.input :label,
-        label: 'Displayed reason',
-        required: true,
-        placeholder: 'Enter Displayed reason...',
-        hint: "Provide a friendly description for the reason that will be displayed to the customer."
-    %>
-    <%=
-      f.input :code,
-        label: 'Internal return code',
-        required: true,
-        placeholder: 'Enter Internal return code...',
-        hint: "For internal use only. Must be unique. To aid in analytics, we do not recommend changing the code once set."
-    %>
-    <%= f.input :active,
-      label: 'Reason is visible to customers'
-    %>
-    <%= f.input :ordering,
-      label: 'Ordering',
-      placeholder: 'Enter Ordering...',
-      hint: "The order in which the reason will be displayed to the customer. Reasons with lower numbers will be displayed first."
-    %>
+<% reason ||= reason || Reason.new %>
+<%= form_with model: [reason], url: "/storefronts/edit_reason/#{reason.id}", method: :patch, id: "edit_reason_form" do |f| %>
+  <h1 class="text-3xl font-semibold my-3">Edit Return Reason</h1>
+  <div class="flex flex-col">
 
-    <button type="button" class="btn-danger" data-action="nested-form#removeAssociation">Remove</button>
-    <%= f.hidden_field :_destroy %>
+    <label class="block mb-2 text-xl .input-lable">Displayed reson</label>
+    <%=
+    f.text_field :label,
+      label: false,
+      value: reason.label,
+      class: "p-3 mt-2 input-color border border-gray-300 rounded-lg border-separate",
+      required: true,
+      placeholder: 'Enter Displayed reason...'
+  %>
+    <p class="block mb-4 text-sm mt-2 text input-lable">Provided a friendly description for the reason that be
+      Displayed to the customer.</p>
   </div>
+
+  <div class="flex flex-col">
+    <label class="block mb-2 text-xl .input-lable">Internal retrun code</label>
+    <%=
+      f.text_field :code,
+        label: false,
+        value: reason.code,
+        required: true,
+        class: "p-3 mt-2 input-color border border-gray-300 rounded-lg border-separate",
+        placeholder: 'Enter Internal return code...'
+    %>
+    <p class="block mb-4 text-sm mt-2 text input-lable">For Internal use only. Must be unique. To in analytics, we
+      do not recommned changin the code once set.</p>
+  </div>
+
+  <div class="flex content-start" id="visibility-container">
+  <label class="text-xl font-bold cursor-pointer toggle-button">
+    <i class="fas fa-eye" id=<%= "reason-eye-icon-#{reason.id}" %>></i>
+    Return Reason is
+    <span id="visibility-status">Hidden</span>
+  </label>
 </div>
+<p class="block mb-4 ml-6 text-sm mt-3 text input-label" id=<%= "visibility-text-#{reason.id}" %>>
+  When hidden, this return is not offered as an option to
+  the customer. Click on the eye icon to toggle visibility.
+</p>
+<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const eyeIcon = document.getElementById(`<%= "eye-icon-#{reason.id}" %>`);
+    const reasonEyeIcon = document.getElementById(`<%= "reason-eye-icon-#{reason.id}" %>`);
+    const visibilityContainer = document.getElementById('visibility-container');
+    const visibilityStatus = document.getElementById('visibility-status');
+    const visibilityText = document.getElementById(`<%= "visibility-text-#{reason.id}" %>`);
+    let isHidden = false;
+    function toggleVisibility() {
+      isHidden = !isHidden;
+      if (isHidden) {
+        eyeIcon.classList.add('fa-eye-slash');
+        eyeIcon.style.color = 'grey'; // Change color to grey
+        reasonEyeIcon.classList.add('fa-eye-slash');
+        visibilityStatus.textContent = 'Hidden';
+        visibilityText.style.display = 'none';
+      } else {
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.style.color = 'blue'; // Change color back to blue
+        reasonEyeIcon.classList.remove('fa-eye-slash');
+        visibilityStatus.textContent = 'Visible';
+        visibilityText.style.display = 'block';
+      }
+    }
+    eyeIcon.addEventListener('click', toggleVisibility);
+    reasonEyeIcon.addEventListener('click', toggleVisibility);
+  });
+</script>
+
+  <div class="mt-3 w-full flex justify-between">
+    <button
+    class="px-5 py-2 text-red-500 font-medium border-2 border-red-600 rounded-md border-spacing-28" data-action="nested-form#removeAssociation">
+      <%= link_to "Delete" , url: "/storefronts/#{reason.id}", class: "text-xl" %>
+      
+    </button>
+    <%= f.submit "Continue", id: "submitBtn", class: "px-5 py-2 font-medium border-2 bg-yellow-500 rounded-lg border-spacing-28" %>
+  </div>
+<% end %>
+

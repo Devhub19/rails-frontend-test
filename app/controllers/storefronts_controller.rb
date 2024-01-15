@@ -1,9 +1,25 @@
 class StorefrontsController < ApplicationController
-  before_action :set_storefront, only: %i[ show edit update destroy ]
+  before_action :set_storefront, only: %i[ show edit update destroy]
 
   # GET /storefronts or /storefronts.json
   def index
     @storefronts = Storefront.all
+  end
+
+  def update_position
+    reason = Reason.where(id: params[:id]).first
+    reason.insert_at(params[:position].to_i)
+    head :ok
+  end
+
+  def edit_reason
+    @reasons = Reason.find_by(id: params['id'])
+    @storefront = @reasons.storefront
+    @reasons.update(label: params['reason']['label'],code: params['reason']['code'], active: params['reason']['_destroy'])
+    respond_to do |format|
+      format.html { redirect_to root_url(@storefront), notice: "Storefront was successfully created." }
+      format.js { render inline: "location.reload();" }
+    end
   end
 
   # GET /storefronts/1 or /storefronts/1.json
@@ -22,7 +38,6 @@ class StorefrontsController < ApplicationController
   # POST /storefronts or /storefronts.json
   def create
     @storefront = Storefront.new(storefront_params)
-
     respond_to do |format|
       if @storefront.save
         format.html { redirect_to storefront_url(@storefront), notice: "Storefront was successfully created." }
@@ -38,7 +53,7 @@ class StorefrontsController < ApplicationController
   def update
     respond_to do |format|
       if @storefront.update(storefront_params)
-        format.html { redirect_to [:edit, @storefront], notice: "Storefront was successfully updated." }
+        format.html { redirect_to "/storefront", notice: "Storefront was successfully updated." }
         format.json { render :edit, status: :ok, location: @storefront }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -55,6 +70,11 @@ class StorefrontsController < ApplicationController
       format.html { redirect_to storefronts_url, notice: "Storefront was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def edit_reasons
+    @reason = Reason.find(params[:id])
+    @storefront = @reason.storefront
   end
 
   private
@@ -75,6 +95,7 @@ class StorefrontsController < ApplicationController
             :ordering,
             :active,
             :_destroy,
+            :position,
             { restricted_resolution_types: [] }
           ]
         }
